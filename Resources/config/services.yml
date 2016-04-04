@@ -1,0 +1,13 @@
+parameters:
+    itkg_translation.command.translation.class: Itkg\TranslationBundle\Command\TranslationConverterCommand
+
+services:
+    itkg_translation.command.translation:
+        class: %itkg_translation.command.translation.class%
+        arguments:
+            - @itkg_translation.finder
+            - @filesystem
+        tags:
+            -  { name: console.command }
+    itkg_translation.finder:
+        class: Symfony\Component\Finder\Finder
