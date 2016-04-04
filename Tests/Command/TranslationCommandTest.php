@@ -48,6 +48,21 @@ class TranslationCommandTest extends WebTestCase
         $this->assertEquals(file_get_contents($this->exportPath.'/messages.fr.csv'), file_get_contents($this->importPath.'/result/messages.fr.csv'));
     }
 
+    public function testExportSpecificDomain()
+    {
+        $this->commandTester->execute(array(
+            'command'  => 'itkg_translation:translation:converter',
+            '--input'  => 'yml',
+            '--output' => 'csv',
+            '--domain' => 'domain',
+            '--path'   => $this->importPath.'/data',
+            '--output-path' => $this->exportPath.'/domain'
+        ));
+
+        $this->assertCount(1, glob($this->exportPath.'/domain'));
+        $this->assertEquals(file_get_contents($this->exportPath.'/domain/domain.en.csv'), file_get_contents($this->importPath.'/result/domain.en.csv'));
+    }
+
     public function testImport()
     {
         $this->commandTester->execute(array(
