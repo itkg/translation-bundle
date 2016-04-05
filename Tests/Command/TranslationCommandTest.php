@@ -25,9 +25,13 @@ class TranslationCommandTest extends WebTestCase
         static::$kernel = static::createKernel();
         static::$kernel->boot();
 
+        $extractor = static::$kernel->getContainer()->get('itkg_translation.extractor.translation');
+        $extractor->setContainer(static::$kernel->getContainer());
+        $writer = static::$kernel->getContainer()->get('itkg_translation.writer.message_catalogue');
+        $writer->setContainer(static::$kernel->getContainer());
         $this->command     = new TranslationConverterCommand(
-            static::$kernel->getContainer()->get('itkg_translation.finder'),
-            static::$kernel->getContainer()->get('filesystem')
+            $extractor,
+            $writer
         );
         $application = new Application(static::$kernel);
         $this->command->setApplication($application);
