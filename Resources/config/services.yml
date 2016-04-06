@@ -1,13 +1,27 @@
 parameters:
     itkg_translation.command.translation.class: Itkg\TranslationBundle\Command\TranslationConverterCommand
+    itkg_translation.extractor.translation.class: Itkg\TranslationBundle\Extractor\TranslationExtractor
+    itkg_translation.writer.message_catalogue.class: Itkg\TranslationBundle\Writer\MessageCatalogueWriter
 
 services:
-    itkg_translation.command.translation:
-        class: %itkg_translation.command.translation.class%
+    itkg_translation.writer.message_catalogue:
+        class: %itkg_translation.writer.message_catalogue.class%
+        arguments:
+            - @translation.writer
+
+    itkg_translation.extractor.translation:
+        class: %itkg_translation.extractor.translation.class%
         arguments:
             - @itkg_translation.finder
             - @filesystem
+
+    itkg_translation.command.translation:
+        class: %itkg_translation.command.translation.class%
+        arguments:
+            - @itkg_translation.extractor.translation
+            - @itkg_translation.writer.message_catalogue
         tags:
             -  { name: console.command }
+
     itkg_translation.finder:
         class: Symfony\Component\Finder\Finder
